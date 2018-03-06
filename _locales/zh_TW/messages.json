@@ -1,0 +1,30 @@
+{
+	"extName": {
+		"message": "嘸蝦米查碼",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "查詢嘸蝦米拆碼",
+		"description": ""
+	},
+	"queryBoshiamy": {
+		"message": "查詢嘸蝦米拆碼",
+		"description": ""
+	},
+  "contextMenu": {
+		"message": "右鍵選單",
+		"description": ""
+	},
+	"toolbarIcon": {
+		"message": "工具列圖示",
+		"description": ""
+	},
+  "showInNewTab": {
+		"message": "在新分頁顯示拆碼",
+		"description": ""
+	},
+	"showByAlert": {
+		"message": "用網頁訊息顯示拆碼",
+		"description": ""
+	}
+}

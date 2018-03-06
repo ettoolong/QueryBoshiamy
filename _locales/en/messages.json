@@ -1,0 +1,30 @@
+{
+	"extName": {
+		"message": "Query Boshiamy",
+		"description": ""
+	},
+	"extDescription": {
+		"message": "Query boshiamy IME input code.",
+		"description": ""
+	},
+	"queryBoshiamy": {
+		"message": "Query Boshiamy code",
+		"description": ""
+	},
+  "contextMenu": {
+		"message": "Context menu",
+		"description": ""
+	},
+	"toolbarIcon": {
+		"message": "Tool bar icon",
+		"description": ""
+	},
+  "showInNewTab": {
+		"message": "Show in new tab",
+		"description": ""
+	},
+	"showByAlert": {
+		"message": "Show by alert message",
+		"description": ""
+	}
+}

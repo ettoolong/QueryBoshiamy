@@ -1,0 +1,52 @@
+{
+  "description": "__MSG_extDescription__",
+  "manifest_version": 2,
+  "name": "__MSG_extName__",
+  "version": "0.0.1",
+  "homepage_url": "https://github.com/ettoolong/QueryBoshiamy",
+  "icons": {
+    "16": "icon/logo.ico"
+  },
+  "applications": {
+    "gecko": {
+      "id": "queryBoshiamy.beta@ettoolong",
+      "strict_min_version": "51.0"
+    }
+  },
+  "developer": {
+    "name": "Ett Chung",
+    "url": "https://github.com/ettoolong/QueryBoshiamy"
+  },
+  "background": {
+    "scripts": ["script/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content-script.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "browser_action": {
+    "browser_style": true,
+    "default_title": "__MSG_queryBoshiamy__",
+    "default_icon": "icon/logo.ico"
+  },
+  "permissions": [
+    "contextMenus",
+    "storage",
+    "tabs",
+    "activeTab",
+    "webRequest",
+    "webRequestBlocking",
+    "*://boshiamy.com/*"
+  ],
+  "default_locale": "en",
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": false,
+    "browser_style": true
+  }
+}
