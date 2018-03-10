@@ -2,7 +2,7 @@
   "description": "__MSG_extDescription__",
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage_url": "https://github.com/ettoolong/QueryBoshiamy",
   "icons": {
     "16": "icon/logo.ico"
@@ -26,7 +26,8 @@
       "js": [
         "script/content-script.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "match_about_blank": true
     }
   ],
   "browser_action": {
