@@ -2,7 +2,7 @@
   "description": "__MSG_extDescription__",
   "manifest_version": 2,
   "name": "__MSG_extName__",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage_url": "https://github.com/ettoolong/QueryBoshiamy",
   "icons": {
     "16": "icon/logo.ico"
@@ -24,7 +24,7 @@
     {
       "matches": ["<all_urls>"],
       "js": [
-        "content-script.js"
+        "script/content-script.js"
       ],
       "run_at": "document_start"
     }
@@ -39,8 +39,6 @@
     "storage",
     "tabs",
     "activeTab",
-    "webRequest",
-    "webRequestBlocking",
     "*://boshiamy.com/*"
   ],
   "default_locale": "en",

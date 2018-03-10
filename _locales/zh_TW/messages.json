@@ -15,6 +15,10 @@
 		"message": "右鍵選單",
 		"description": ""
 	},
+  "inputQueryCharacters": {
+		"message": "輸入要查詢的字元",
+		"description": ""
+	},
 	"toolbarIcon": {
 		"message": "工具列圖示",
 		"description": ""

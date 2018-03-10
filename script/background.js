@@ -56,16 +56,10 @@ window.addEventListener('DOMContentLoaded', event => {
   loadPreference();
 });
 
-function addReferer(e){
-  e.requestHeaders.push({name:'Referer', value:'https://boshiamy.com/liuquery.php'});
-  return {requestHeaders: e.requestHeaders};
-}
-
-browser.webRequest.onBeforeSendHeaders.addListener(
-  addReferer,
-  {urls: ['https://boshiamy.com/liuquery.php']},
-  ['blocking', 'requestHeaders']
-);
+// function addReferer(e){
+//   e.requestHeaders.push({name:'Referer', value:'https://boshiamy.com/liuquery.php'});
+//   return {requestHeaders: e.requestHeaders};
+// }
 
 const createContextMenu = () => {
   menuId = browser.contextMenus.create({
@@ -93,14 +87,14 @@ const createContextMenu = () => {
 };
 
 const liuquery = (c, token, dataType, cb) => {
-  browser.webRequest.onBeforeSendHeaders.addListener(
-    addReferer,
-    {urls: ['https://boshiamy.com/liuquery.php']},
-    ['blocking', 'requestHeaders']
-  );
+  // browser.webRequest.onBeforeSendHeaders.addListener(
+  //   addReferer,
+  //   {urls: ['https://boshiamy.com/liuquery.php']},
+  //   ['blocking', 'requestHeaders']
+  // );
   let req = new XMLHttpRequest();
   req.onload = function(e) {
-  browser.webRequest.onBeforeSendHeaders.removeListener(addReferer);
+    //browser.webRequest.onBeforeSendHeaders.removeListener(addReferer);
     //console.log(req.responseText);
     let result = [];
     let text = req.responseText;
