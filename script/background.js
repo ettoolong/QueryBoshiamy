@@ -1,7 +1,6 @@
 let defaultPreference = {
-  contextMenuAction: 0,
-  toolbarIconAction: 0,
-  version: 1
+  enableContextMenu: true,
+  version: 2
 };
 let preferences = {};
 let menuId = null;
@@ -14,6 +13,7 @@ const storageChangeHandler = (changes, area) => {
     for (let item of changedItems) {
       preferences[item] = changes[item].newValue;
     }
+    resetContextMenu();
   }
 };
 
@@ -47,8 +47,7 @@ const loadPreference = () => {
         browser.storage.local.set(update).then(null, err => {});
       }
     }
-    // resetContextMenu();
-    // setBrowserActionIcon();
+    resetContextMenu();
   });
 };
 
@@ -56,46 +55,75 @@ window.addEventListener('DOMContentLoaded', event => {
   loadPreference();
 });
 
-// function addReferer(e){
-//   e.requestHeaders.push({name:'Referer', value:'https://boshiamy.com/liuquery.php'});
-//   return {requestHeaders: e.requestHeaders};
-// }
-
-const createContextMenu = () => {
-  menuId = browser.contextMenus.create({
-    type: 'normal',
-    title: browser.i18n.getMessage('queryBoshiamy'),
-    contexts: ['selection'],
-    onclick: (data, tab) => {
-      let text = data.selectionText;
-      getToken(token => {
-        liuquery(text, token, preferences.contextMenuAction === 0 ? 'table' : 'array', data => {
-          //console.log(array.join(','));
-          if(preferences.contextMenuAction === 0) {
-            chrome.tabs.create({url:'./queryResult.html'}, tab => {
-              _result[tab.id] = data;
-            });
-          }
-          else {
-            chrome.tabs.sendMessage(tab.id, {action:'showAlert', data: data});
-          }
-        });
-      });
-      //
+function getParamsFromUrl(url) {
+  url = decodeURI(url);
+  if (typeof url === 'string') {
+    let params = url.split('?');
+    let eachParamsArr = params[1].split('&');
+    let obj = {};
+    if (eachParamsArr && eachParamsArr.length) {
+      eachParamsArr.map(param => {
+        let keyValuePair = param.split('=')
+        let key = keyValuePair[0];
+        let value = keyValuePair[1];
+        obj[key] = value;
+      })
     }
+    return obj;
+  }
+}
+
+function redirect(requestDetails) {
+  let params = getParamsFromUrl(requestDetails.url)
+  execQuery(params.q, 'table');
+  return {cancel: true};
+}
+
+browser.webRequest.onBeforeRequest.addListener(
+  redirect,
+  {urls: ['https://boshiamy.com/webextension/*']},
+  ['blocking']
+);
+
+const execQuery = (text, dataType) => {
+  getToken(token => {
+    liuquery(text, token, dataType, data => {
+      if(dataType === 'table') {
+        chrome.tabs.create({url:'./queryResult.html'}, tab => {
+          _result[tab.id] = data;
+        });
+      }
+      else {
+        chrome.tabs.sendMessage(tab.id, {action:'showAlert', data: data});
+      }
+    });
+  });
+}
+
+const resetContextMenu = () => {
+  browser.contextMenus.removeAll(() => {
+    menuId = null;
+    createContextMenu();
   });
 };
 
+const createContextMenu = () => {
+  if(preferences.enableContextMenu) {
+    menuId = browser.contextMenus.create({
+      type: 'normal',
+      title: browser.i18n.getMessage('queryBoshiamy'),
+      contexts: ['selection'],
+      onclick: (data, tab) => {
+        let text = data.selectionText;
+        execQuery(text, 'table');
+      }
+    });
+  }
+};
+
 const liuquery = (c, token, dataType, cb) => {
-  // browser.webRequest.onBeforeSendHeaders.addListener(
-  //   addReferer,
-  //   {urls: ['https://boshiamy.com/liuquery.php']},
-  //   ['blocking', 'requestHeaders']
-  // );
   let req = new XMLHttpRequest();
   req.onload = function(e) {
-    //browser.webRequest.onBeforeSendHeaders.removeListener(addReferer);
-    //console.log(req.responseText);
     let result = [];
     let text = req.responseText;
     text = text.replace(/\r\n/g,'\n').replace(/\n/g,'');
@@ -160,30 +188,6 @@ const getToken = (cb) => {
     cb(_token);
   }
 };
-
-chrome.browserAction.onClicked.addListener((tab) => {
-  browser.tabs.sendMessage(
-    tab.id,
-    {action: 'getSelectionText'}
-  ).then(response => {
-    if(response.text) {
-      getToken(token => {
-        liuquery(response.text, token, preferences.toolbarIconAction === 0 ? 'table' : 'array', data => {
-          if(preferences.toolbarIconAction === 0) {
-            chrome.tabs.create({url:'./queryResult.html'}, tab => {
-              _result[tab.id] = data;
-            });
-          }
-          else {
-            chrome.tabs.sendMessage(tab.id, {action:'showAlert', data: data});
-          }
-        });
-      });
-    }
-  });
-});
-
-createContextMenu();
 
 browser.runtime.onMessage.addListener( (request, sender, sendResponse) => {
   sendResponse(_result[sender.tab.id]);
