@@ -1,6 +1,5 @@
 let defaultPreference = {
   contextMenuAction: 0,
-  toolbarIconAction: 0,
   version: 1
 };
 let preferences = {};
@@ -77,7 +76,9 @@ const createContextMenu = () => {
             });
           }
           else {
-            chrome.tabs.sendMessage(tab.id, {action:'showAlert', data: data});
+            chrome.tabs.executeScript({
+              code: `alert('${JSON.parse(JSON.stringify(data.join(', ')))}')`
+            });
           }
         });
       });
@@ -160,28 +161,6 @@ const getToken = (cb) => {
     cb(_token);
   }
 };
-
-chrome.browserAction.onClicked.addListener((tab) => {
-  browser.tabs.sendMessage(
-    tab.id,
-    {action: 'getSelectionText'}
-  ).then(response => {
-    if(response.text) {
-      getToken(token => {
-        liuquery(response.text, token, preferences.toolbarIconAction === 0 ? 'table' : 'array', data => {
-          if(preferences.toolbarIconAction === 0) {
-            chrome.tabs.create({url:'./queryResult.html'}, tab => {
-              _result[tab.id] = data;
-            });
-          }
-          else {
-            chrome.tabs.sendMessage(tab.id, {action:'showAlert', data: data});
-          }
-        });
-      });
-    }
-  });
-});
 
 createContextMenu();
 
